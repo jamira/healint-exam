@@ -12,7 +12,7 @@
                          </tr>
                        </thead>
                        <tbody>
-                         <tr v-for="setting in settingsTab">
+                         <tr v-for="(setting, index) in settingsTab" :key="index">
                               <th scope="row">
                                    <div class="form-check">
                                         <input
@@ -28,6 +28,7 @@
                          </tr>
                        </tbody>
                      </table>
+                       <span>Checked names: {{ checkedNames }}</span>
                      <!-- <TreatmentForm></TreatmentForm> -->
                 </div>
            </div>
@@ -54,47 +55,50 @@ export default {
                settingsTab: []
           }
      },
+     computed: {
+          checkedNames () {
+               return this.settingsTab.filter(setting => setting.status).map(name => name.name)
+          }
+     },
      methods: {
           displayStatus(item) {
 
-               this.$emit('displayStatus', this.childData = true);
+               //this.$emit('displayStatus', this.childData = true);
 
                let updateItem = {
                     customType: item.customType,
                     name: item.name,
-                    status: item.status != true ? true : false
+                    status: item.status
+                    //status: item.status != true ? true : false
                }
+
+               console.log(updateItem)
 
                this.$http.put('https://healint-vue-exam.firebaseio.com/settings_tabs/' + item.id + '.json', updateItem)
                .then((response) => {
                     console.log(response)
-                    this.$emit('displayStatus', this.childData = false);
-                    location.reload();
-               })
-               .catch((error) => { console.log('Error: ', error)});
-          },
-          fetchSettings() {
-
-               this.$http.get('https://healint-vue-exam.firebaseio.com/settings_tabs.json')
-               .then((data) => { return data.json(); })
-               .then((data) => {
-                    var tmpItems = [];
-                    for(let key in data) {
-                         data[key].id = key;
-                         tmpItems.push(data[key]);
-                    }
-
-                    this.settingsTab = tmpItems;
+                    //this.$emit('displayStatus', this.childData = false);
+                    //location.reload();
                })
                .catch((error) => { console.log('Error: ', error)});
           }
-
      },
      components: {
           TreatmentForm
      },
      created() {
-          this.fetchSettings();
+          this.$http.get('https://healint-vue-exam.firebaseio.com/settings_tabs.json')
+          .then((data) => { return data.json(); })
+          .then((data) => {
+               var tmpItems = [];
+               for(let key in data) {
+                    data[key].id = key;
+                    tmpItems.push(data[key]);
+               }
+
+               this.settingsTab = tmpItems;
+          })
+          .catch((error) => { console.log('Error: ', error)});
      },
      filters: {
           ucFirst(value) {

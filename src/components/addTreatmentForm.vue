@@ -31,7 +31,7 @@ export default {
                customType: {
                     name: '',
                     customType: '',
-                    status: true
+                    status: "false"
                },
                errors: []
           }
