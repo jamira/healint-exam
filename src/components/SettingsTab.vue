@@ -18,9 +18,9 @@
                                         <input
                                              class="form-check-input"
                                              type="checkbox"
-                                             :data-key-src="setting.id"
+                                             :id="setting.id"
                                              v-model="setting.status"
-                                             @click="displayStatus(setting)">
+                                             @click="displayStatus(setting, $event);">
                                    </div>
                               </th>
                               <td>{{ setting.name | ucFirst}}</td>
@@ -28,7 +28,7 @@
                          </tr>
                        </tbody>
                      </table>
-                       <span>Checked names: {{ checkedNames }}</span>
+
                      <!-- <TreatmentForm></TreatmentForm> -->
                 </div>
            </div>
@@ -52,33 +52,29 @@ export default {
      data() {
           return {
                childData: false,
-               settingsTab: []
+               settingsTab: [],
           }
      },
      computed: {
-          checkedNames () {
-               return this.settingsTab.filter(setting => setting.status).map(name => name.name)
-          }
+
      },
      methods: {
-          displayStatus(item) {
-
-               //this.$emit('displayStatus', this.childData = true);
-
+          displayStatus(item, event) {
+               this.$emit('displayStatus', this.childData = true);
                let updateItem = {
                     customType: item.customType,
                     name: item.name,
                     status: item.status
-                    //status: item.status != true ? true : false
+                    //status: item.status != false ? true : false
                }
 
-               console.log(updateItem)
+               //console.log(updateItem)
 
                this.$http.put('https://healint-vue-exam.firebaseio.com/settings_tabs/' + item.id + '.json', updateItem)
                .then((response) => {
                     console.log(response)
-                    //this.$emit('displayStatus', this.childData = false);
-                    //location.reload();
+                    this.$emit('displayStatus', this.childData = false);
+                    location.reload();
                })
                .catch((error) => { console.log('Error: ', error)});
           }
