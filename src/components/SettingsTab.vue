@@ -14,13 +14,15 @@
                        <tbody>
                          <tr v-for="(setting, index) in settingsTab" :key="index">
                               <th scope="row">
+
                                    <div class="form-check">
                                         <input
                                              class="form-check-input"
                                              type="checkbox"
                                              :id="setting.id"
                                              v-model="setting.status"
-                                             @click="displayStatus(setting, $event);">
+                                             :setting.indeterminate.sync="setting.indeterminate"
+                                             @change="displayStatus(setting)">
                                    </div>
                               </th>
                               <td>{{ setting.name | ucFirst}}</td>
@@ -28,7 +30,6 @@
                          </tr>
                        </tbody>
                      </table>
-
                      <!-- <TreatmentForm></TreatmentForm> -->
                 </div>
            </div>
@@ -52,14 +53,13 @@ export default {
      data() {
           return {
                childData: false,
+               selected: [],
                settingsTab: [],
           }
      },
-     computed: {
-
-     },
      methods: {
           displayStatus(item, event) {
+
                this.$emit('displayStatus', this.childData = true);
                let updateItem = {
                     customType: item.customType,
@@ -68,7 +68,7 @@ export default {
                     //status: item.status != false ? true : false
                }
 
-               //console.log(updateItem)
+               // console.log(updateItem)
 
                this.$http.put('https://healint-vue-exam.firebaseio.com/settings_tabs/' + item.id + '.json', updateItem)
                .then((response) => {
@@ -89,8 +89,12 @@ export default {
                var tmpItems = [];
                for(let key in data) {
                     data[key].id = key;
+                    data[key].indeterminate = true;
+
                     tmpItems.push(data[key]);
                }
+
+               console.log(tmpItems)
 
                this.settingsTab = tmpItems;
           })
