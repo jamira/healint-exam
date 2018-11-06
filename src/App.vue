@@ -16,22 +16,22 @@
                      </div>
 
                      <div id="mobile" class="d-block d-sm-block d-lg-none">
-                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                              <li class="nav-item">
-                                   <a class="nav-link active" id="pills-recent-tab" data-toggle="pill" href="#recent" role="tab" aria-controls="pills-recent" aria-selected="true"><i class="fa fa-list-alt"></i> Recent</a>
-                              </li>
-                              <li class="nav-item">
-                                   <a class="nav-link" id="pills-settings-tab" data-toggle="pill" href="#settings" role="tab" aria-controls="pills-settings" aria-selected="false"><i class="fa fa-cog fa-sm"></i> Settings</a>
-                              </li>
-                         </ul>
-                         <div class="tab-content" id="pills-tabContent">
-                              <div class="tab-pane fade show active" id="recent" role="tabpanel" aria-labelledby="pills-recent">
+                          <ul class="nav nav-pills mb-3" role="pills-tab">
+                            <li class="nav-item" v-for="tab in tabs">
+                              <a :class="activeTabName == tab.name ? 'active show' : ''" class="nav-link" :id="tab.name" data-toggle="tab" :href="'#'+tab.name" role="tab" :aria-controls="tab.name" aria-selected="true" @click.prevent="onClickTab(tab.name, $event)">
+                                   <i class="fa" :class="tab.classFa"></i>
+                                   {{tab.displayName}}</a>
+                            </li>
+                          </ul>
+
+                          <div class="tab-content">
+                            <div :class="activeTabName == 'recent' ? 'active show' : ''" class="tab-pane" id="recent" role="tabpanel" aria-labelledby="recent">
                                    <RecentTab @onSubmitSetting="isLoading = $event"></RecentTab>
-                              </div>
-                              <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="pills-settings">
+                            </div>
+                            <div :class="activeTabName == 'settings' ? 'active show' : ''" class="tab-pane" id="settings" role="tabpanel" aria-labelledby="settings">
                                    <SettingsTab @displayStatus="isLoading = $event"></SettingsTab>
-                              </div>
-                         </div>
+                            </div>
+                          </div>
                      </div>
                 </div>
             </main>
@@ -46,7 +46,22 @@ import SettingsTab from './components/SettingsTab'
 export default {
      data() {
           return {
-               isLoading: false
+               isLoading: false,
+               tabs: [
+                 {
+                        name: 'recent',
+                        classFa: 'fa-list-alt',
+                        displayName: 'Recent',
+                        status: null
+                 },
+                 {
+                        name: 'settings',
+                        classFa: 'fa-cog',
+                        displayName: 'Settings',
+                        status: null
+                 }
+               ],
+               activeTabName: null,
           }
      },
      name: 'app',
@@ -54,6 +69,19 @@ export default {
           Header,
           RecentTab,
           SettingsTab
+     },
+     mounted() {
+          var activeTab = localStorage.getItem("activeTab");
+          this.activeTabName = activeTab;
+     },
+     methods: {
+          onClickTab(tab, e) {
+               this.activeTabName = tab;
+               localStorage.setItem("activeTab", tab);
+          },
+          displayContent(name) {
+            return this.activeTabName === name;
+          },
      }
 }
 </script>
@@ -85,7 +113,8 @@ loading*/
      box-shadow: 0 0 20px #333;
 }
 
-#mobile #pills-tab{
-     padding: 0 15px;
+#mobile #settings-tab,
+#mobile #recent-tab,{
+     padding: 0;
 }
 </style>

@@ -55,6 +55,7 @@ export default {
                childData: false,
                selected: [],
                settingsTab: [],
+               activeTab: null,
           }
      },
      methods: {
@@ -68,13 +69,26 @@ export default {
                     //status: item.status != false ? true : false
                }
 
-               // console.log(updateItem)
-
                this.$http.put('https://healint-vue-exam.firebaseio.com/settings_tabs/' + item.id + '.json', updateItem)
                .then((response) => {
-                    console.log(response)
                     this.$emit('displayStatus', this.childData = false);
                     location.reload();
+               })
+               .catch((error) => { console.log('Error: ', error)});
+          },
+          fetchData() {
+               this.$http.get('https://healint-vue-exam.firebaseio.com/settings_tabs.json')
+               .then((data) => { return data.json(); })
+               .then((data) => {
+                    var tmpItems = [];
+                    for(let key in data) {
+                         data[key].id = key;
+                         data[key].indeterminate = true;
+
+                         tmpItems.push(data[key]);
+                    }
+
+                    this.settingsTab = tmpItems;
                })
                .catch((error) => { console.log('Error: ', error)});
           }
@@ -83,22 +97,7 @@ export default {
           TreatmentForm
      },
      created() {
-          this.$http.get('https://healint-vue-exam.firebaseio.com/settings_tabs.json')
-          .then((data) => { return data.json(); })
-          .then((data) => {
-               var tmpItems = [];
-               for(let key in data) {
-                    data[key].id = key;
-                    data[key].indeterminate = true;
-
-                    tmpItems.push(data[key]);
-               }
-
-               console.log(tmpItems)
-
-               this.settingsTab = tmpItems;
-          })
-          .catch((error) => { console.log('Error: ', error)});
+          this.fetchData();
      },
      filters: {
           ucFirst(value) {
