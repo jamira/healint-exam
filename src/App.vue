@@ -72,7 +72,12 @@ export default {
      },
      mounted() {
           var activeTab = localStorage.getItem("activeTab");
-          this.activeTabName = activeTab;
+          if (activeTab) {
+               this.activeTabName = activeTab;
+          }
+          else {
+               this.activeTabName = this.tabs[0].name;
+          }
      },
      methods: {
           onClickTab(tab, e) {
