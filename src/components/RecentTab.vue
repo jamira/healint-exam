@@ -275,7 +275,7 @@ export default {
           },
           onSubmitSetting(response) {
 
-               //this.$emit('onSubmitSetting', this.childData = true);
+               this.$emit('onSubmitSetting', this.childData = true);
 
                var tmpArray = [];
                var treatmentUsed = response.treatment;
@@ -293,7 +293,6 @@ export default {
                     notes: this.responseObj.notes.length > 0 ? this.responseObj.notes : response.notes,
                     treatment: this.arrayUnique(tmpArray)
                }
-
 
                this.$http.put('https://healint-vue-exam.firebaseio.com/recent_tabs/' + response.id + '.json', settingUpdate)
                .then((response) => {
