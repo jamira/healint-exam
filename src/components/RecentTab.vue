@@ -218,7 +218,7 @@ export default {
                               const elem = document.querySelector('#filtered-settings');
                               for (var i = 0; i < this.filteredSettings.length; i++) {
                                    if(this.filteredSettings[i].name === data.name) {
-                                        elem.children[i].style.display = 'none'
+                                        elem.children[i].remove()
                                    }
                               }
                          }
