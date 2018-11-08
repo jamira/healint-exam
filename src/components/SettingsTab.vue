@@ -60,9 +60,10 @@ export default {
      },
      methods: {
           displayStatus(item, event) {
-
+               
                this.$emit('displayStatus', this.childData = true);
                let updateItem = {
+                    id: item.id,
                     customType: item.customType,
                     name: item.name,
                     status: item.status
@@ -71,8 +72,9 @@ export default {
 
                this.$http.put('https://healint-vue-exam.firebaseio.com/settings_tabs/' + item.id + '.json', updateItem)
                .then((response) => {
+                    this.$eventHub.$emit('displayStatus', updateItem);
                     this.$emit('displayStatus', this.childData = false);
-                    location.reload();
+                    //location.reload();
                })
                .catch((error) => { console.log('Error: ', error)});
           },

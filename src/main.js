@@ -4,23 +4,7 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource)
 
-
-Vue.component('test-component', {
-    template: '#test--component',
-    props: ['testprop']
-})
-
-var list = {
-    items: [
-        {
-            title: 'This is a title',
-            status: true
-        }, {
-            title: 'Here is another',
-            status: false
-        }
-    ]
-}
+Vue.prototype.$eventHub = new Vue(); 
 
 new Vue({
   el: '#app',

@@ -68,8 +68,8 @@
                                         <div class="format-treatment-setting">
                                              <div class="treatment-used pb-1">
                                                   <h5 class="card-text mb-3" v-if="filteredSettings.length">Treatment(s) Used</h5>
-                                                  <div v-if="response.showLess">
-                                                       <div class="form-check form-check-inline" v-for="data in filteredSettings">
+                                                  <div id="filtered-settings" v-if="response.showLess">
+                                                       <div class="form-check form-check-inline filteredSettings-inline" v-for="data in filteredSettings">
                                                          <input
                                                             class="form-check-input filteredSetting"
                                                             type="checkbox"
@@ -209,6 +209,21 @@ export default {
                     }
 
                     this.treatments = tmpItems;
+                    this.$eventHub.$on('displayStatus', (data) => {
+                         if (data.status == true) {
+                              this.treatments.push(data)
+                         }
+
+                         if (data.status == false) {
+                              const elem = document.querySelector('#filtered-settings');
+                              for (var i = 0; i < this.filteredSettings.length; i++) {
+                                   if(this.filteredSettings[i].name === data.name) {
+                                        elem.children[i].style.display = 'none'
+                                   }
+                              }
+                         }
+
+                    });
                })
                .catch((error) => { console.log('Error: ', error)});
           },
@@ -260,7 +275,7 @@ export default {
           },
           onSubmitSetting(response) {
 
-               this.$emit('onSubmitSetting', this.childData = true);
+               //this.$emit('onSubmitSetting', this.childData = true);
 
                var tmpArray = [];
                var treatmentUsed = response.treatment;
@@ -279,12 +294,13 @@ export default {
                     treatment: this.arrayUnique(tmpArray)
                }
 
-               this.$http.put('https://healint-vue-exam.firebaseio.com/recent_tabs/' + response.id + '.json', settingUpdate)
-               .then((response) => {
-                    this.$emit('onSubmitSetting', this.childData = false);
-                    location.reload();
-               })
-               .catch((error) => { console.log('Error: ', error)});
+
+               // this.$http.put('https://healint-vue-exam.firebaseio.com/recent_tabs/' + response.id + '.json', settingUpdate)
+               // .then((response) => {
+               //      this.$emit('onSubmitSetting', this.childData = false);
+               //      location.reload();
+               // })
+               // .catch((error) => { console.log('Error: ', error)});
           },
           arrayUnique(array) {
                // var a = array.concat();
