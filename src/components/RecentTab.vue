@@ -295,12 +295,12 @@ export default {
                }
 
 
-               // this.$http.put('https://healint-vue-exam.firebaseio.com/recent_tabs/' + response.id + '.json', settingUpdate)
-               // .then((response) => {
-               //      this.$emit('onSubmitSetting', this.childData = false);
-               //      location.reload();
-               // })
-               // .catch((error) => { console.log('Error: ', error)});
+               this.$http.put('https://healint-vue-exam.firebaseio.com/recent_tabs/' + response.id + '.json', settingUpdate)
+               .then((response) => {
+                    this.$emit('onSubmitSetting', this.childData = false);
+                    location.reload();
+               })
+               .catch((error) => { console.log('Error: ', error)});
           },
           arrayUnique(array) {
                // var a = array.concat();
